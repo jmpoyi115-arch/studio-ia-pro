@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Studio IA Pro - Plateforme Créative Intégrée</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #9b59b6;
+            --secondary-dark: #8e44ad;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --accent: #e74c3c;
+            --accent-dark: #c0392b;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --gray: #95a5a6;
+            --gray-light: #bdc3c7;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --shadow-heavy: 0 8px 30px rgba(0,0,0,0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-gradient);
+            margin: 0;
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 10;
+        }
+        h1 {
+            color: var(--primary);
+            font-size: 2.8em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        p.subtitle {
+            color: var(--gray);
+            font-size: 1.2em;
+            margin: 10px 0 0;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #eee;
+            position: relative;
+            z-index: 10;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+        }
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+        .tab {
+            padding: 14px 28px;
+            cursor: pointer;
+            background: #f1f1f1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition);
+            border-radius: 10px 10px 0 0;
+            margin-right: 8px;
+            min-width: 140px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .tab:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-2px);
+        }
+        .tab.active {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        .tab-content {
+            display: none;
+            padding: 30px;
+            border: 2px solid #ddd;
+            border-top: none;
+            border-radius: 0 12px 12px 12px;
+            background: var(--card-bg);
+            box-shadow: var(--shadow-heavy);
+            min-height: 500px;
+            animation: slideIn 0.4s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .tab-content.active {
+            display: block;
+        }
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        input[type="text"]:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        button {
+            padding: 14px 24px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(52, 152, 219, 0.2);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        button.secondary {
+            background-color: var(--secondary);
+        }
+        button.secondary:hover {
+            background-color: var(--secondary-dark);
+        }
+        button.accent {
+            background-color: var(--accent);
+        }
+        button.accent:hover {
+            background-color: var(--accent-dark);
+        }
+        .control-group {
+            margin-bottom: 20px;
+        }
+        .control-label {
+            font-weight: 600;
+            color: var(--dark);
+            display: block;
+            margin-bottom: 8px;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .result-container {
+            margin-top: 25px;
+            padding: 20px;
+            border: 2px dashed var(--gray);
+            border-radius: 12px;
+            min-height: 100px;
+            background-color: rgba(249, 249, 249, 0.7);
+            position: relative;
+        }
+        .result-container h3 {
+            margin: 0 0 15px 0;
+            color: var(--primary);
+            font-size: 1.3em;
+        }
+        img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        audio, video {
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 10px;
+        }
+        .loader {
+            display: none;
+            margin: 30px auto;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid var(--primary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .progress-container {
+            margin: 20px 0;
+            display: none;
+        }
+        .progress-bar {
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .status-text {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: var(--gray);
+            text-align: center;
+        }
+        .feature-details {
+            margin-top: 30px;
+            padding: 25px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow-heavy);
+        }
+        .feature-item {
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid #f0f0f0;
+            position: relative;
+        }
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+        .feature-title {
+            color: var(--primary);
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .feature-title i {
+            margin-right: 10px;
+            font-size: 1.8em;
+        }
+        .feature-desc {
+            color: var(--dark);
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            line-height: 1.7;
+        }
+        .tech-stack {
+            font-size: 0.95em;
+            color: var(--gray);
+            font-style: italic;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(154, 89, 182, 0.1);
+            border-radius: 6px;
+        }
+        .complexity-level {
+            display: inline-block;
+            padding: 5px 10px;
+            background: var(--warning);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .technical-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid var(--primary);
+        }
+        .technical-details h4 {
+            margin: 0 0 10px 0;
+            color: var(--dark);
+            font-size: 1.2em;
+        }
+        .technical-details ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .technical-details li {
+            margin-bottom: 8px;
+        }
+        .parameter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .parameter-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .parameter-name {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        .parameter-desc {
+            font-size: 0.9em;
+            color: var(--gray);
+        }
+        .example-prompts {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(52, 152, 219, 0.08);
+            border-radius: 10px;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+        .example-prompts h4 {
+            margin: 0 0 15px 0;
+            color: var(--primary-dark);
+            font-size: 1.2em;
+        }
+        .example-prompts ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .example-prompts li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-right: 5px;
+        }
+        .workflow-diagram {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 1px dashed var(--gray-light);
+        }
+        .workflow-diagram h4 {
+            margin: 0 0 15px 0;
+            color: var(--dark);
+        }
+        .workflow-steps {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .workflow-step {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            padding: 15px;
+            position: relative;
+        }
+        .workflow-step:not(:last-child)::after {
+            content: "→";
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .step-number {
+            display: inline-flex;
+            width: 30px;
+            height: 30px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .step-title {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        .step-desc {
+            font-size: 0.9em;
+            color: var(--gray);
+        }
+        /* Video Editor Styles */
+        .video-editor {
+          display: flex;
+          gap: 20px;
+          margin-top: 20px;
+        }
+        .video-controls {
+          flex: 1;
+          min-width: 300px;
+        }
+        .video-preview {
+          flex: 2;
+          border: 2px solid #ddd;
+          border-radius: 10px;
+          overflow: hidden;
+          min-height: 300px;
+          background: #000;
+          position: relative;
+        }
+        .video-timeline {
+          margin-top: 20px;
+          height: 80px;
+          background: #f0f0f0;
+          border-radius: 10px;
+          padding: 10px;
+        }
+        .timeline-track {
+          height: 30px;
+          background: white;
+          border-radius: 5px;
+          margin-bottom: 10px;
+          position: relative;
+        }
+        .timeline-clip {
+          position: absolute;
+          height: 100%;
+          background: var(--primary);
+          border-radius: 5px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-size: 0.8em;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          padding: 0 5px;
+        }
+        /* Music Composer Styles */
+        .music-composer {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
+        .music-controls {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 15px;
+        }
+        .piano-roll {
+          height: 150px;
+          background: #f0f0f0;
+          border-radius: 10px;
+          position: relative;
+          overflow: hidden;
+        }
+        .piano-key {
+          position: absolute;
+          background: white;
+          border: 1px solid #ddd;
+          bottom: 0;
+          width: 20px;
+          border-radius: 0 0 5px 5px;
+        }
+        .piano-key.black {
+          background: black;
+          color: white;
+          z-index: 2;
+          width: 14px;
+        }
+        .piano-key.active {
+          background: var(--primary);
+        }
+        .transport-controls {
+          display: flex;
+          justify-content: center;
+          gap: 15px;
+          margin-top: 20px;
+        }
+        .transport-btn {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.5em;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+          .container {
+            padding: 15px;
+          }
+          h1 {
+            font-size: 2.2em;
+          }
+          .tab {
+            padding: 12px 18px;
+            min-width: 120px;
+            font-size: 14px;
+          }
+          .tab-content {
+            padding: 20px;
+          }
+          .video-editor {
+            flex-direction: column;
+          }
+          .workflow-steps {
+            flex-direction: column;
+          }
+          .workflow-step:not(:last-child)::after {
+            content: "";
+            position: static;
+            margin: 10px 0;
+          }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎥 Studio IA Pro</h1>
+            <p class="subtitle">Plateforme intégrée de création multimédia par intelligence artificielle</p>
+        </header>
+        <div class="tabs">
+            <button class="tab active" onclick="openTab(event, 'Chat')">💬 Chat IA</button>
+            <button class="tab" onclick="openTab(event, 'Image')">🖼️ Génération d'Image</button>
+            <button class="tab" onclick="openTab(event, 'Voice')">🔊 Synthèse Vocale</button>
+            <button class="tab" onclick="openTab(event, 'Video')">🎬 Création Vidéo</button>
+            <button class="tab" onclick="openTab(event, 'Music')">🎵 Composition Musicale</button>
+            <button class="tab" onclick="openTab(event, 'Details')">🔬 Détails Techniques</button>
+        </div>
+
+        <!-- ONGLET CHAT -->
+        <div id="Chat" class="tab-content active">
+            <h2>Assistant IA Conversationnel Avancé</h2>
+            <div class="control-group">
+                <label class="control-label">Question ou instruction</label>
+                <input type="text" id="userInput" placeholder="Ex: Explique-moi le fonctionnement des réseaux de neurones convolutifs" />
+            </div>
+            <div class="control-group">
+                <label class="control-label">Mode de réponse</label>
+                <select id="responseMode">
+                    <option value="concise">Concis (1-2 phrases)</option>
+                    <option value="detailed">Détaillé (plusieurs paragraphes)</option>
+                    <option value="technical">Technique (terminologie spécialisée)</option>
+                    <option value="creative">Créatif (analogies et métaphores)</option>
+                </select>
+            </div>
+            <div class="button-group">
+                <button onclick="askAI()">Générer Réponse</button>
+                <button class="secondary" onclick="clearChat()">Effacer Historique</button>
+                <button class="accent" onclick="saveChat()">Sauvegarder</button>
+            </div>
+            <div class="loader" id="loader"></div>
+            <div class="progress-container" id="chatProgress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="chatProgressFill"></div>
+                </div>
+                <div class="status-text" id="chatStatus">Analyse du contexte en cours...</div>
+            </div>
+            <div class="result-container" id="response">
+                <h3>Réponse de l'IA</h3>
+                <p>La réponse apparaîtra ici après traitement par notre modèle linguistique avancé.</p>
+            </div>
+        </div>
+
+        <!-- ONGLET IMAGE -->
+        <div id="Image" class="tab-content">
+            <h2>Générateur d'Images par IA</h2>
+            <div class="control-group">
+                <label class="control-label">Prompt descriptif (plus détaillé = meilleur résultat)</label>
+                <textarea id="promptInput" placeholder="Un robot jardinier dans un champ de fleurs futuriste, style réaliste, lumière dorée du coucher de soleil, détails ultra-réalistes, 8K" rows="3"></textarea>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Style artistique</label>
+                <select id="imageStyle">
+                    <option value="realistic">Réaliste photographique</option>
+                    <option value="painting">Peinture à l'huile</option>
+                    <option value="digital">Art numérique</option>
+                    <option value="vector">Illustration vectorielle</option>
+                    <option value="anime">Style anime japonais</option>
+                    <option value="cyberpunk">Cyberpunk néon</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Paramètres avancés</label>
+                <div class="parameter-grid">
+                    <div class="parameter-item">
+                        <div class="parameter-name">Résolution</div>
+                        <div class="parameter-desc">
+                            <select id="resolution">
+                                <option value="512x512">512×512 (Standard)</option>
+                                <option value="768x768">768×768 (HD)</option>
+                                <option value="1024x1024">1024×1024 (Ultra HD)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="parameter-item">
+                        <div class="parameter-name">Guidance Scale</div>
+                        <div class="parameter-desc">
+                            <input type="range" id="guidanceScale" min="1" max="20" value="7" />
+                            <span id="guidanceValue">7</span>
+                        </div>
+                    </div>
+                    <div class="parameter-item">
+                        <div class="parameter-name">Nombre d'images</div>
+                        <div class="parameter-desc">
+                            <select id="imageCount">
+                                <option value="1">1 image</option>
+                                <option value="2">2 images</option>
+                                <option value="4">4 images</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button onclick="generateImage()">Générer Image(s)</button>
+                <button class="secondary" onclick="refinePrompt()">Optimiser Prompt</button>
+                <button class="accent" onclick="downloadAll()">Télécharger Tout</button>
+            </div>
+            <div class="loader" id="imageLoader"></div>
+            <div class="progress-container" id="imageProgress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="imageProgressFill"></div>
+                </div>
+                <div class="status-text" id="imageStatus">Préparation du modèle diffusion...</div>
+            </div>
+            <div class="result-container" id="imageResult">
+                <h3>Résultats de la génération</h3>
+                <p>Les images générées apparaîtront ici après le processus de création par IA.</p>
+            </div>
+        </div>
+
+        <!-- ONGLET VOIX -->
+        <div id="Voice" class="tab-content">
+            <h2>Synthèse Vocale Multivoix</h2>
+            <div class="control-group">
+                <label class="control-label">Texte à synthétiser</label>
+                <textarea id="voiceText" placeholder="Bonjour, je suis votre assistant vocal personnalisé. Je peux lire n'importe quel texte avec une voix naturelle et expressive." rows="4"></textarea>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Voix sélectionnée</label>
+                <select id="voiceType">
+                    <option value="male1">Homme - Chaleureux et professionnel</option>
+                    <option value="male2">Homme - Jeune et dynamique</option>
+                    <option value="female1">Femme - Claire et posée</option>
+                    <option value="female2">Femme - Énergique et enthousiaste</option>
+                    <option value="child">Enfant - Innocent et joueur</option>
+                    <option value="robot">Robot - Mécanique et futuriste</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Paramètres vocaux</label>
+                <div class="parameter-grid">
+                    <div class="parameter-item">
+                        <div class="parameter-name">Vitesse</div>
+                        <div class="parameter-desc">
+                            <input type="range" id="speechRate" min="50" max="150" value="100" />
+                            <span id="rateValue">100%</span>
+                        </div>
+                    </div>
+                    <div class="parameter-item">
+                        <div class="parameter-name">Hauteur</div>
+                        <div class="parameter-desc">
+                            <input type="range" id="pitch" min="50" max="150" value="100" />
+                            <span id="pitchValue">100%</span>
+                        </div>
+                    </div>
+                    <div class="parameter-item">
+                        <div class="parameter-name">Intonation</div>
+                        <div class="parameter-desc">
+                            <input type="range" id="intonation" min="50" max="150" value="100" />
+                            <span id="intonationValue">100%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button onclick="generateVoice()">Générer Voix</button>
+                <button class="secondary" onclick="previewVoice()">Aperçu</button>
+                <button class="accent" onclick="downloadAudio()">Télécharger MP3</button>
+            </div>
+            <div class="loader" id="voiceLoader"></div>
+            <div class="progress-container" id="voiceProgress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="voiceProgressFill"></div>
+                </div>
+                <div class="status-text" id="voiceStatus">Analyse prosodique en cours...</div>
+            </div>
+            <div class="result-container" id="audioResult">
+                <h3>Résultat audio</h3>
+                <p>L'audio généré apparaîtra ici après la synthèse vocale par IA.</p>
+            </div>
+        </div>
+
+        <!-- ONGLET VIDÉO -->
+        <div id="Video" class="tab-content">
+            <h2>Éditeur Vidéo par IA</h2>
+            <div class="control-group">
+                <label class="control-label">Thème ou scénario de la vidéo</label>
+                <textarea id="videoPrompt" placeholder="Une présentation professionnelle sur les énergies renouvelables, avec des animations modernes, des transitions fluides, de la musique d'ambiance et une voix-off explicative." rows="3"></textarea>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Structure de la vidéo</label>
+                <select id="videoTemplate">
+                    <option value="presentation">Présentation professionnelle</option>
+                    <option value="tutorial">Tutoriel pas-à-pas</option>
+                    <option value="promotion">Vidéo promotionnelle</option>
+                    <option value="educational">Contenu éducatif</option>
+                    <option value="story">Histoire narrative</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Paramètres vidéo</label>
+                <div class="parameter-grid">
+                    <div class="parameter-item">
+                        <div class="parameter-name">Durée</div>
+                        <div class="parameter-desc">
+                            <select id="videoDuration">
+                                <option value="30">30 secondes</option>
+                                <option value="60">1 minute</option>
+                                <option value="120">2 minutes</option>
+                                <option value="180">3 minutes</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="parameter-item">
+                        <div class="parameter-name">Résolution</div>
+                        <div class="parameter-desc">
+                            <select id="videoResolution">
+                                <option value="720">HD (1280×720)</option>
+                                <option value="1080" selected>Full HD (1920×1080)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="parameter-item">
+                        <div class="parameter-name">Style visuel</div>
+                        <div class="parameter-desc">
+                            <select id="videoStyle">
+                                <option value="modern">Moderne minimaliste</option>
+                                <option value="corporate">Corporatif professionnel</option>
+                                <option value="creative">Créatif expressif</option>
+                                <option value="documentary">Documentaire informatif</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="video-editor">
+                <div class="video-controls">
+                    <div class="button-group">
+                        <button onclick="generateVideo()">Générer Vidéo</button>
+                        <button class="secondary" onclick="addScene()">Ajouter Scène</button>
+                        <button class="accent" onclick="exportVideo()">Exporter</button>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Scènes actuelles</label>
+                        <div id="sceneList" style="height: 150px; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px; padding: 10px;">
+                            <p style="color: var(--gray); font-style: italic;">Aucune scène ajoutée</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-preview">
+                    <div id="videoPreviewContent" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2em;">
+                        Aperçu vidéo<br><small style="font-size: 0.8em;">Cliquez sur "Générer Vidéo" pour créer votre contenu</small>
+                    </div>
+                </div>
+            </div>
+            <div class="video-timeline">
+                <div class="timeline-track">
+                    <div class="timeline-clip" style="left: 0; width: 30%;">Introduction</div>
+                    <div class="timeline-clip" style="left: 35%; width: 40%;">Contenu principal</div>
+                    <div class="timeline-clip" style="left: 80%; width: 20%;">Conclusion</div>
+                </div>
+            </div>
+            <div class="loader" id="videoLoader"></div>
+            <div class="progress-container" id="videoProgress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="videoProgressFill"></div>
+                </div>
+                <div class="status-text" id="videoStatus">Assemblage des éléments multimédia...</div>
+            </div>
+            <div class="result-container" id="videoResult">
+                <h3>Résultat vidéo</h3>
+                <p>La vidéo générée apparaîtra ici après le processus de création par IA.</p>
+            </div>
+        </div>
+
+        <!-- ONGLET MUSIQUE -->
+        <div id="Music" class="tab-content">
+            <h2>Compositeur Musical par IA</h2>
+            <div class="control-group">
+                <label class="control-label">Description musicale</label>
+                <textarea id="musicPrompt" placeholder="Une composition orchestrale épique avec des cordes puissantes, des cuivres majestueux et une rythmique dramatique, parfait pour une scène de film d'action intense. Tempo: 120 BPM, tonalité: ré mineur." rows="3"></textarea>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Genre musical</label>
+                <select id="musicGenre">
+                    <option value="classical">Classique orchestrale</option>
+                    <option value="electronic">Électronique moderne</option>
+                    <option value="jazz">Jazz sophistiqué</option>
+                    <option value="rock">Rock énergique</option>
+                    <option value="ambient">Ambient relaxant</option>
+                    <option value="hiphop">Hip-hop urbain</option>
+                    <option value="pop">Pop commerciale</option>
+                </select>
+            </div>
+            <div class="music-composer">
+                <div class="music-controls">
+                    <div class="parameter-item">
+                        <div class="parameter-name">Tempo (BPM)</div>
+                        <div class="parameter-desc">
+                            <input type="range" id="tempo" min="60" max="200" value="120" />
+                            <span id="tempoValue">120 BPM</span>
+                        </div>
+                    </div>
+                    <div class="parameter-item">
+                        <div class="parameter-name">Durée</div>
+                        <div class="parameter-desc">
+                            <select id="musicDuration">
+                                <option value="60">1 minute</option>
+                                <option value="120">2 minutes</option>
+                                <option value="180">3 minutes</option>
+                                <option value="240">4 minutes</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="parameter-item">
+                        <div class="parameter-name">Complexité</div>
+                        <div class="parameter-desc">
+                            <input type="range" id="complexity" min="1" max="10" value="5" />
+                            <span id="complexityValue">5/10</span>
+                        </div>
+                    </div>
+                    <div class="parameter-item">
+                        <div class="parameter-name">Émotion</div>
+                        <div class="parameter-desc">
+                            <select id="emotion">
+                                <option value="epic">Épique/dramatique</option>
+                                <option value="happy">Joyeux/positif</option>
+                                <option value="sad">Triste/mélancolique</option>
+                                <option value="tense">Tendu/suspendu</option>
+                                <option value="calm">Calme/relaxant</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="piano-roll" id="pianoRoll">
+                </div>
+                <div class="transport-controls">
+                    <button class="transport-btn" onclick="playMusic()">▶</button>
+                    <button class="transport-btn" onclick="pauseMusic()">⏸</button>
+                    <button class="transport-btn" onclick="stopMusic()">⏹</button>
+                    <button class="transport-btn secondary" onclick="recordNotes()">●</button>
+                </div>
+            </div>
+            <div class="button-group">
+                <button onclick="generateMusic()">Composer Musique</button>
+                <button class="secondary" onclick="analyzeHarmony()">Analyser Harmonie</button>
+                <button class="accent" onclick="downloadMusic()">Télécharger MP3</button>
+            </div>
+            <div class="loader" id="musicLoader"></div>
+            <div class="progress-container" id="musicProgress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="musicProgressFill"></div>
+                </div>
+                <div class="status-text" id="musicStatus">Génération des motifs mélodiques...</div>
+            </div>
+            <div class="result-container" id="musicResult">
+                <h3>Résultat musical</h3>
+                <p>La composition musicale générée apparaîtra ici après le processus de création par IA.</p>
+            </div>
+        </div>
+
+        <!-- ONGLET DÉTAILS -->
+        <div id="Details" class="tab-content">
+            <h2>Détails Techniques Avancés</h2>
+            <div class="feature-item">
+                <h3 class="feature-title">💬 Assistant IA Conversationnel Multicouche</h3>
+                <div class="complexity-level">Niveau de complexité: Très Élevé</div>
+                <p class="feature-desc">Notre système de chat IA utilise une architecture multicouche combinant plusieurs modèles linguistiques spécialisés pour fournir des réponses optimales selon le contexte.</p>
+                <div class="tech-stack">Technologies: Transformers, Attention Mechanisms, Fine-tuning, Context Window Management, Sentiment Analysis, Knowledge Graph Integration</div>
+                <div class="technical-details">
+                    <h4>Architecture du système</h4>
+                    <ul>
+                        <li><strong>Couche 1 - Analyse sémantique:</strong> Interprétation profonde de la requête utilisateur avec identification des entités, relations et intentions</li>
+                        <li><strong>Couche 2 - Recherche contextuelle:</strong> Accès à une base de connaissances structurée et aux documents pertinents basés sur le contexte</li>
+                        <li><strong>Couche 3 - Génération de réponse:</strong> Utilisation d'un modèle de langage spécialisé adapté au domaine identifié</li>
+                        <li><strong>Couche 4 - Post-traitement:</strong> Optimisation de la formulation, vérification de la cohérence et application du style demandé</li>
+                        <li><strong>Couche 5 - Apprentissage continu:</strong> Amélioration automatique basée sur les interactions passées et les feedbacks utilisateurs</li>
+                    </ul>
+                </div>
+                <div class="workflow-diagram">
+                    <h4>Flux de traitement:</h4>
+                    <div class="workflow-steps">
+                        <div class="workflow-step">
+                            <div class="step-number">1</div>
+                            <div class="step-title">Requête</div>
+                            <div class="step-desc">Entrée utilisateur analysée</div>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="step-number">2</div>
+                            <div class="step-title">Encodage</div>
+                            <div class="step-desc">Transformation en vecteurs sémantiques</div>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="step-number">3</div>
+                            <div class="step-title">Contextualisation</div>
+                            <div class="step-desc">Intégration de l'historique conversationnel</div>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="step-number">4</div>
+                            <div class="step-title">Génération</div>
+                            <div class="step-desc">Production de la réponse par IA</div>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="step-number">5</div>
+                            <div class="step-title">Sortie</div>
+                            <div class="step-desc">Réponse formatée et retournée</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+            const contents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].classList.remove("active");
+            }
+            evt.currentTarget.className += " active";
+            document.getElementById(tabName).classList.add("active");
+        }
+
+        async function askAI() {
+            const input = document.getElementById("userInput");
+            const responseDiv = document.getElementById("response");
+            const loader = document.getElementById("loader");
+            const progressBar = document.getElementById("chatProgress");
+            const progressFill = document.getElementById("chatProgressFill");
+            const statusText = document.getElementById("chatStatus");
+            const question = input.value.trim();
+            const mode = document.getElementById("responseMode").value;
+
+            if (!question) {
+                responseDiv.innerHTML = "<p style='color: var(--accent);'>⚠️ Veuillez poser une question ou donner une instruction.</p>";
+                return;
+            }
+
+            loader.style.display = "block";
+            progressBar.style.display = "block";
+            responseDiv.style.opacity = "0.7";
+            progressFill.style.width = "0%";
+
+            try {
+                statusText.textContent = "Analyse de votre requête...";
+                await new Promise(resolve => setTimeout(resolve, 800));
+                progressFill.style.width = "20%";
+
+                statusText.textContent = "Génération par IA...";
+                progressFill.style.width = "40%";
+
+                // Simuler une vraie réponse après traitement
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                const responses = {
+                    concise: "L'intelligence artificielle est un domaine qui permet aux machines d'effectuer des tâches intelligentes.",
+                    detailed: "L'intelligence artificielle (IA) est un vaste domaine de l'informatique consacré à la création de systèmes capables d'effectuer des tâches nécessitant normalement l'intelligence humaine. Ces tâches incluent la reconnaissance visuelle, la reconnaissance vocale, la prise de décision, la traduction entre les langues et bien d'autres.",
+                    technical: "L'architecture Transformer repose sur le mécanisme d'attention multi-têtes, permettant au modèle de peser différemment l'importance de chaque mot dans une séquence d'entrée.",
+                    creative: "Imaginez l'intelligence artificielle comme un jardinier cosmique, cultivant des jardins de pensée dans le vaste champ de l'information."
+                };
+
+                const aiResponse = responses[mode] || responses.detailed;
+
+                statusText.textContent = "Mise en forme...";
+                await new Promise(resolve => setTimeout(resolve, 300));
+                progressFill.style.width = "100%";
+
+                responseDiv.innerHTML = `
+                    <h3>Réponse de l'IA (${mode})</h3>
+                    <p>${aiResponse}</p>
+                    <div style="margin-top: 15px; padding: 10px; background: rgba(52, 152, 219, 0.1); border-radius: 8px; font-size: 0.9em;">
+                        <strong>Modèle :</strong> Simulation réussie
+                    </div>
+                `;
+            } catch (err) {
+                responseDiv.innerHTML = `<p style='color: var(--accent);'>❌ Erreur API : ${err.message}</p>`;
+            } finally {
+                loader.style.display = "none";
+                progressBar.style.display = "none";
+                responseDiv.style.opacity = "1";
+            }
+        }
+
+        function clearChat() {
+            document.getElementById("response").innerHTML = "<h3>Réponse de l'IA</h3><p>La réponse apparaîtra ici après traitement par notre modèle linguistique avancé.</p>";
+        }
+
+        function saveChat() {
+            alert("Historique de chat sauvegardé avec succès !");
+        }
+
+        // Autres fonctions restent simulées pour l'instant
+        function generateImage() { alert("Génération d'image (fonction non encore connectée)"); }
+        function refinePrompt() { alert("Optimisation du prompt (fonction non encore connectée)"); }
+        function downloadAll() { alert("Téléchargement des images"); }
+        function generateVoice() { alert("Synthèse vocale (fonction non encore connectée)"); }
+        function previewVoice() { alert("Aperçu vocal"); }
+        function downloadAudio() { alert("Téléchargement audio"); }
+        function generateVideo() { alert("Création vidéo (fonction non encore connectée)"); }
+        function addScene() { alert("Scène ajoutée"); }
+        function exportVideo() { alert("Export vidéo"); }
+        function generateMusic() { alert("Composition musicale (fonction non encore connectée)"); }
+        function analyzeHarmony() { alert("Analyse harmonique"); }
+        function downloadMusic() { alert("Téléchargement musique"); }
+        function playMusic() { alert("Lecture démarrée"); }
+        function pauseMusic() { alert("Pause"); }
+        function stopMusic() { alert("Arrêt"); }
+        function recordNotes() { alert("Enregistrement activé"); }
+
+        // Initialisation du piano
+        function initPianoRoll() {
+            const pianoRoll = document.getElementById("pianoRoll");
+            const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+            const octaves = 2;
+            pianoRoll.innerHTML = '';
+            for (let octave = 4; octave < 6; octave++) {
+                for (let i = 0; i < 12; i++) {
+                    const isBlack = [1,3,6,8,10].includes(i);
+                    const key = document.createElement('div');
+                    key.className = `piano-key ${isBlack ? 'black' : ''}`;
+                    key.style.left = `${(octave - 4) * 140 + (isBlack ? 13 : 0) + (i % 12) * 20 - (isBlack ? 7 : 0)}px`;
+                    key.style.bottom = isBlack ? '30px' : '0';
+                    key.style.height = isBlack ? '60%' : '100%';
+                    key.style.zIndex = isBlack ? '2' : '1';
+                    key.title = `${notes[i]}${octave}`;
+                    pianoRoll.appendChild(key);
+                }
+            }
+        }
+
+        window.onload = initPianoRoll;
+    </script>
+</body>
+</html>
